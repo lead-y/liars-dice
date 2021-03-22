@@ -7,28 +7,24 @@ from typing import Dict, List
 
 from random import randInt
 
-
-print(
-    Upbidder.upbidder().round(
-        myDie = [1,1,1],
-        otherDie = {"player2": 3, "player3": 5},
-        previousBids = [API.Bid(2, 3), API.Bid(2, 4)]
-    )
-)
-
 playerTypes = [Upbidder.upbidder, LieCaller.LieCaller]
 
+## Play a game, which consists of multiple rounds until 
+## only one player has die left.
 def game(numPlayers):
     players = [playerTypes[i]() for i in [0,1]]
     diceCounts = {player: 5 for player in players}
     diceState = reroll(diceCounts)
-    rount(diceState)
+    round(diceState)
 
 
-
+## Reroll the specified number of die for all players.
 def reroll(diceCounts: Dict[PlayerType, int]) -> Dict[PlayerType, List[int]]:
     return {player: [randint(1, 6) for i in range(numDie)] for (player, numdie) in enumerate(diceCounts)}
 
+## Complete a round by giving players dice, and letting
+## players take turns taking actions until someone 
+## makes an illegal bid, calls "liar", or calls "spot on".
 def round(diceState: Dict[playerType, List[int]], players: List[PlayerType]):
     currentPlayer = 0
     previousBids = []
