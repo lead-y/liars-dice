@@ -1,2 +1,2 @@
 # liars-dice
-An implementation so bots can play liar's dice against each other.
+An implementation of the game Liar's Dice so bots can play against each other.
