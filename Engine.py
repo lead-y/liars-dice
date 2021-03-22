@@ -1,6 +1,7 @@
 import API
 
 import Upbidder
+import LieCaller
 
 from typing import Dict, List
 
@@ -15,10 +16,10 @@ print(
     )
 )
 
-playerTypes = [Upbidder.upbidder]
+playerTypes = [Upbidder.upbidder, LieCaller.LieCaller]
 
 def game(numPlayers):
-    players = [playerTypes[i]() for i in [0,0]]
+    players = [playerTypes[i]() for i in [0,1]]
     diceCounts = {player: 5 for player in players}
     diceState = reroll(diceCounts)
     rount(diceState)
@@ -30,10 +31,21 @@ def reroll(diceCounts: Dict[PlayerType, int]) -> Dict[PlayerType, List[int]]:
 
 def round(diceState: Dict[playerType, List[int]], players: List[PlayerType]):
     currentPlayer = 0
+    previousBids = []
+
     action = players[currentPlayer].action(
         myDie = diceState[players[currentPlayer]],
-        otherDie = 
-    
-    
-    
-    # TODO finish writing the first game and test it by running this file.
+        otherDie = {player: len(die) for (player, die) in  diceState},
+        playerOrder = players,
+        previousBids = previousBids
+    )
+
+    if (action == "liar"):
+        # check who's wrong
+        # return the player(s) who lose a die.
+        raise "Not implemented yet"
+
+    else: ## TODO check if is a bid, then if is a valid bid
+        previousBids.append(action)
+        return {"previousBids": previousBids}
+
