@@ -21,12 +21,11 @@ A minimal player that always bids up:
 
 class myPlayer:
   def action(
-    myDie: List[number],
-    dieCounts: Dict[player, number],
-    playerOrder: List[player],
-    previousBids: List[Bid]
+    myDie: List[int],
+    dieCounts: Dict[playerName: str, int],
+    previousBids: List[{"player": str, "bid": Bid}]
     ):
-    lastBid = previousBids[-1]
+    lastBid = previousBids[-1]["bid"]
     return Bid(lastBid.die, lastBid.count + 1)
 
 
@@ -46,8 +45,7 @@ class PlayerType:
     def action(
         myDie: List[int],
         otherDie: Dict[str, int],
-        playerOrder: List[str],
-        previousBids: List[API.Bid]
+        previousBids: List[Dict[str, typing.Any]]
     ):
         raise """Your player must implement the `action` function. Action should take in the current game state and output either a Bid, the string "liar", or the string "spot on" """
 

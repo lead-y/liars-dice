@@ -6,8 +6,7 @@ class LieCaller(API.PlayerType):
     def action(
         myDie: List[int],
         otherDie: Dict[str, int],
-        playerOrder: List[str],
-        previousBids: List[API.Bid]
+        previousBids: List[Dict[str, typing.Any]]
       ):
         return "liar"
 
