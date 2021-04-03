@@ -21,6 +21,7 @@ A minimal player that always bids up:
 
 class myPlayer:
   def action(
+    self,
     myDie: List[int],
     dieCounts: Dict[playerName: str, int],
     previousBids: List[{"player": str, "bid": Bid}]
@@ -31,6 +32,8 @@ class myPlayer:
 
 """
 
+from typing import Dict, List, Any
+
 class Bid:
     def __init__(self, die, count):
         self.die = die
@@ -39,15 +42,16 @@ class Bid:
         return str({"die": self.die, "count": self.count})
 
 class PlayerType:
-    def __init__():
+    def __init__(self):
         print ("Initializing player without any state.")
     
     def action(
+        self,
         myDie: List[int],
         otherDie: Dict[str, int],
-        previousBids: List[Dict[str, typing.Any]]
+        previousBids: List[Dict[str, Any]]
     ):
-        raise """Your player must implement the `action` function. Action should take in the current game state and output either a Bid, the string "liar", or the string "spot on" """
+        raise Exception("""Your player must implement the `action` function. Action should take in the current game state and output either a Bid, the string "liar", or the string "spot on" """)
 
     
     
