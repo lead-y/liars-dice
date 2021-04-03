@@ -2,16 +2,25 @@ import API
 
 from typing import Dict, List
 
-from random import randint
+from random import randint, random
+
+## This file holds the engine, which is responsible for actually
+# playing players against each other in games (keeping game state & calling 
+# 'action' on players appropriately.)
+# 
+# Each player instance gets a unique name, and other players can know that name.
+# Within a game, players are put in an order and usually referenced by their position in this order. 
+# Player order is not explicitly provided to players, but they can infer it from the previousBids list.
 
 ## Play a game, which consists of multiple rounds until 
 ## only one player has die left.
 def game(playerTypes: List[API.PlayerType]):
-    print("Starting game")
+    log("Starting game", 'gameEvent')
     players = [playerTypes[i]() for i in [0,1]]
     diceCounts = {player: 5 for player in players}
     diceState = reroll(diceCounts)
     loosers = round(diceState, players)
+    log("Loosers this round: "+ str(loosers), 'gameEvent')
     # Todo - decrement dice counts for the player who lost, check if the game is over, and start a new round.
 
 
@@ -28,10 +37,10 @@ def round(diceState: Dict[API.PlayerType, List[int]], players: List[API.PlayerTy
     currentPlayer = 0
     previousBids = []
 
-    print("Starting round with dice state " + str(diceState))
+    log("Starting round with dice state " + str(diceState), 'debug')
 
     while (len(previousBids) < 1000): # Next player takes their turn
-        print("Taking turn for player " + str(currentPlayer))
+        log("Taking turn for player " + str(currentPlayer), 'gameEvent')
         
         action = players[currentPlayer].action(
             myDie = diceState[players[currentPlayer]],
@@ -39,12 +48,21 @@ def round(diceState: Dict[API.PlayerType, List[int]], players: List[API.PlayerTy
             previousBids = previousBids
         )
 
-        print("Player chose action " + str(action))
+        log("Player chose action " + str(action), 'gameEvent')
 
         if (action == "liar"):
             # check who's wrong
             # return the player(s) who lose a die.
-            raise Exception("Not implemented yet")
+            if (len(previousBids) == 0): ## If you call liar on the first turn, you lose.
+                return [currentPlayer]
+            previousBid: API.Bid = previousBids[-1]["bid"]
+            previousPlayer = currentPlayer - 1 if currentPlayer > 0 else len(players) - 1
+            totalCount = countOf(previousBid.die, diceState)
+            log("Counted " + str(totalCount) + " for bid of " + str(previousBid))
+            if (totalCount >= previousBid.count):
+                return [currentPlayer]
+            else:
+                return [previousPlayer]
 
         if (action == "spot on"):
             raise Exception("Not implemented yet")
@@ -59,6 +77,14 @@ def round(diceState: Dict[API.PlayerType, List[int]], players: List[API.PlayerTy
 
         # Advance to next player
         currentPlayer += 1
-        if (currentPlayer > len(players)):
+        if (currentPlayer > len(players) - 1):
             currentPlayer = 0
+
+def countOf(dieToCount, diceState):
+    return sum(
+        [1 if die == dieToCount else 0 for player in diceState for die in diceState[player]]
+    )
+
+def log(message, level = 'debug'):
+    print(message)
 
