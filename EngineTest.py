@@ -42,7 +42,7 @@ def roundTest():
 roundTest()
 
 def engineTest():
-    Engine.game([Upbidder.upbidder, LieCaller.LieCaller])
+    Engine.game([Upbidder.upbidder(), LieCaller.LieCaller()])
 
 engineTest()
 

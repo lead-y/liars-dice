@@ -14,13 +14,23 @@ from random import randint, random
 
 ## Play a game, which consists of multiple rounds until 
 ## only one player has die left.
-def game(playerTypes: List[API.PlayerType]):
+def game(playerInstances: List[API.PlayerType]):
     log("Starting game", 'gameEvent')
-    players = [playerTypes[i]() for i in [0,1]]
+    players = [playerInstances[i] for i in [0,1]] # TODO shuffle
     diceCounts = {player: 5 for player in players}
-    diceState = reroll(diceCounts)
-    loosers = round(diceState, players)
-    log("Loosers this round: "+ str(loosers), 'gameEvent')
+    while (len(diceCounts) > 1):
+        diceState = reroll(diceCounts)
+        loosers = round(diceState, players)
+        log("Loosers this round: "+ str(loosers), 'gameEvent')
+        for index in loosers:
+            player = players[index]
+            diceCounts[player] -= 1
+            if (diceCounts[player] == 0):
+                log("Player " + str(index) + " is out of this game", 'gameEvent')
+                del players[index]
+                del diceCounts[player]
+    log("Player " + str(players[0]) + " Wins!")
+
     # Todo - decrement dice counts for the player who lost, check if the game is over, and start a new round.
 
 
